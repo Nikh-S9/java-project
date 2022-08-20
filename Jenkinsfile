@@ -5,11 +5,17 @@ pipeline {
         maven 'Maven3'
     }
     stages {
+        stage('Checkout') {
+            agent {label 'slave'}
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Nikh-S9/java-project.git']]])
+            }
+        }
         
         stage('build') {
             agent {label 'slave'}
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean install'
             }
             post {
                 success {
